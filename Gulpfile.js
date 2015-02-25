@@ -3,7 +3,7 @@ var gulp = require('gulp');
 var raml2code = require("raml2code");
 var genPojos = require("raml2code/lib/generators/groovy/pojo");
 var genJaxRS = require("raml2code/lib/generators/groovy/jaxrsInterface");
-var genRetrofitClient = require("raml2code/lib/generators/groovy/retrofitClient");
+var genRetrofitClient = require("raml2code/lib/generators/java/retrofitClient");
 
 var raml = require('gulp-raml');
 
@@ -11,7 +11,7 @@ var packagePojo = "gex.catapi.dto";
 var packageClient = "gex.catapi.client";
 var packageJersey = "gex.catapi.resources";
 
-var ramlResource = 'node_modules/raml2code/test/raml/cats.raml'
+var ramlResource = 'raml/index.raml'
 
 gulp.task('raml', function() {
   gulp.src(ramlResource)

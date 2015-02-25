@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "inlineRef/widgetInlineProperty.schema.json",
+  "title": "WidgetInlineProperty",
+  "type": "object",
+  "description": "A widget is used to generated partials",
+  "properties": {
+    "name": {
+      "description": "The friendly name of the widget ",
+      "type": "string"
+    },
+    "composite":{
+        "$ref": "widgetSelfReference.schema.json#/definitions/innerProperties"
+      },
+    "zid":{
+      "$ref": "widgetSelfReference.schema.json#/definitions/something"
+
+    },
+    "otherColor":{
+      "$ref": "widgetSelfReference.schema.json#/definitions/something/colour"
+    }
+  }
+}

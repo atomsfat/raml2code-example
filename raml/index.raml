@@ -1,0 +1,97 @@
+#%RAML 0.8
+---
+title: Fixture API
+version: v1
+baseUri: http:/localhost:8080/{version}/
+mediaType: application/json
+schemas:
+
+  - cat: !include ../schemas/complex-object/cat-complex.schema.json
+  - cats: !include ../schemas/collections/genericArray.schema.json
+  - genericMap: !include ../schemas/collections/genericMap.schema.json
+  - owner: !include ../schemas/complex-object/owner.schema.json
+resourceTypes:
+  - collection:
+      get:
+        responses:
+          200:
+            body:
+              schema: <<resourcePathName>>
+        queryParameters:
+          searchBy:
+            displayName: Search
+            type: string
+            required: false
+
+      post:
+        responses:
+          200:
+            body:
+              schema: <<resourcePathName | !singularize>>
+        body:
+          schema : <<resourcePathName | !singularize>>
+
+  - member:
+      get:
+        responses:
+          200:
+            body:
+              schema: <<resourcePathName | !singularize>>
+        queryParameters:
+          filterBy:
+            type: string
+          orderBy:
+            type: string
+          clientSecret:
+            type: string
+
+
+      put:
+        responses:
+          201:
+            body:
+              schema: <<resourcePathName | !singularize>>
+        body:
+          schema : <<resourcePathName | !singularize>>
+
+/cats:
+  displayName: Gatitos
+  description: Compra, venta y renta de gatitos
+  type: collection
+  /{catId}:
+    displayName: GatitoById
+    description: Un gatito en especifico
+    type: member
+    /mapping:
+      displayName: SingleContentTypeMapping
+      get:
+        responses:
+          200:
+            body:
+              schema: cat
+    /picture:
+      displayName: GatitoByIdPicture
+      post:
+        body:
+          multipart/form-data:
+            formParameters:
+              file:
+                type: file
+                required: true
+        responses:
+          200:
+            body:
+              schema: cat
+    /webFormCat:
+      displayName:  GatitopByIdForm
+      post:
+        body:
+          application/x-www-form-urlencoded:
+            formParameters:
+              name:
+                type: string
+                required: true
+        responses:
+          200:
+            body:
+              schema: cat

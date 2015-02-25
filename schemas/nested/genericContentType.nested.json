@@ -1,0 +1,407 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "nested/genericContentTypeSchema.nested.json",
+  "title": "Generic Content Type Schema",
+  "description": "This schema includes properties which all content types share",
+  "definitions": {
+    "content": {
+      "type": "object",
+      "properties": {
+        "type": {"type": "string"},
+        "id": {"type": "string"},
+        "role" : {"type": "string"}
+      },
+      "required": ["id"]
+    },
+    "mapKeyValue": {
+      "type": "object",
+      "patternProperties": {
+        "^([a-zA-Z0-9_-]+)$": {
+          "type": "string"
+        }
+      }
+    },
+    "contentId": {
+      "type": "string",
+      "pattern": "^([0-9]{6})-([a-zA-Z0-9_-]+)$"
+    },
+    "iptcSubjectId": {
+      "type": "string",
+      "pattern": "^(subj):([0-9]+)$"
+    },
+    "iptcGenreId": {
+      "type": "string",
+      "pattern": "^(genre):([a-zA-Z0-9_-]+)$"
+    },
+    "serlingDate": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "policy": {
+      "type": "object",
+      "properties": {
+        "action": {
+          "enum": [
+            "shareable",
+            "restricted",
+            "print"
+          ]
+        },
+        "value": {"type": "boolean"},
+        "parties": {
+          "type": "array",
+          "items": {
+            "allOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "id": {"$ref": "#/definitions/contentId"},
+                  "role": {"type": "string"}
+                }
+              }
+            ]
+          }
+        },
+        "constraints": {
+          "type": "array",
+          "items": {
+            "allOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "enum": [
+                      "dateTime",
+                      "spatial"
+                    ]
+                  },
+                  "operator": {
+                    "enum": [
+                      "lt",
+                      "eq",
+                      "neq",
+                      "gt"
+                    ]
+                  },
+                  "rightOperand": {"type": "string"}
+                }
+              }
+            ]
+          }
+        }
+      },
+      "required": [
+        "action"
+      ]
+    },
+    "location": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "in": {
+          "type": "array",
+          "items": {
+            "allOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "id": {"type": "string"}
+                }
+              }
+            ]
+          }
+        },
+        "geoInfo": {
+          "type": "object",
+          "properties": {
+            "latitude": {"type": "number"},
+            "longitude": {"type": "number"}
+          }
+        },
+        "radiusInMeters" : {"type": "number"}
+      },
+      "required": ["name"]
+    },
+    "collaborator": {
+      "type": "object",
+      "properties": {
+        "role":  {"type": "string"},
+        "id": {"$ref": "#/definitions/contentId"},
+        "priority": {"type": "number"},
+        "credited": {"type": "boolean"},
+        "creditLine": {"type": "string"}
+      },
+      "required": [
+        "role",
+        "id"
+      ]
+    }
+  },
+  "type": "object",
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "contentType": {"type": "string"},
+        "tenant": {"type": "string"},
+        "language": {
+          "type": "array",
+          "items": {
+            "allOf": [
+              {
+                "type": "string",
+                "pattern": "^([a-z]{2})(-[A-Z]{2})?$"
+              }
+            ]
+          }
+        },
+        "localizableFields": {
+          "type": "array",
+          "items": {
+            "allOf": [
+              {
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "mimeTypes": {
+          "type": "array",
+          "items": {
+            "allOf": [
+              {
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "policies": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/policy"
+          }
+        },
+        "firstCreatedDate": {"$ref": "#/definitions/serlingDate"},
+        "lastModificationDate": {"$ref": "#/definitions/serlingDate"},
+        "embargoedDate": {"$ref": "#/definitions/serlingDate"},
+        "pubStatus": {
+          "type": "string",
+          "enum": [
+            "usable",
+            "withheld",
+            "canceled"
+          ]
+        },
+        "pubDate": {"$ref": "#/definitions/serlingDate"},
+        "editorialNote": {
+          "type": "string"
+        },
+
+        "relatedContent" : {
+          "patternProperties": {
+            "^ct:([a-zA-Z]+){1}$": {
+              "type": "array",
+              "items":  {"$ref": "#/definitions/content"}
+            }
+          }
+        },
+
+        "isElementOf" : {
+          "patternProperties": {
+            "^ct:([a-zA-Z]+){1}$": {
+              "type": "array",
+              "items":  {"$ref": "#/definitions/content"}
+            }
+          }
+        },
+
+        "images"  : {
+          "type" : "object",
+          "properties" : {
+            "main"  : {"$ref": "#/definitions/content"},
+            "thumb" : {"$ref": "#/definitions/content"},
+            "additional" : {
+              "type" : "array",
+              "items": {"$ref": "#/definitions/content"}
+            }
+          },
+          "required" : [
+            "main", "thumb"
+          ]
+        },
+
+        "pushNotification"  : {"$ref": "#/definitions/content"},
+
+        "breaking"  : {"$ref": "#/definitions/content"},
+
+        "entities" : {
+          "type" : "array",
+          "items": {"$ref": "#/definitions/content"}
+        },
+
+        "located": {
+          "$ref": "#/definitions/location"
+        },
+
+
+        "locationOfEvents": {
+          "type" : "array",
+          "items" : { "$ref": "#/definitions/location" }
+        },
+
+        "collaborators": {
+          "type": "array",
+          "items": {
+            "allOf": [
+              {"$ref": "#/definitions/collaborator"}
+            ]
+          }
+        },
+        "iptc": {
+          "type": "object",
+          "properties": {
+            "subjects": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {"$ref": "#/definitions/iptcSubjectId"}
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            "genre": {
+              "type": "object",
+              "properties": {
+                "id": {"$ref": "#/definitions/iptcGenreId"}
+              },
+              "required": [
+                "id"
+              ]
+            }
+          }
+        },
+        "categories": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {"type": "string"},
+              "inListings": {"type": "boolean"}
+            }
+          }
+        },
+        "tags": {
+          "type": "object",
+          "patternProperties": {
+            "^([a-z]{2})(-[A-Z]{2})?$": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "confidence": {
+          "type": "number"
+        },
+        "rightsInfo": {
+          "type": "object",
+          "properties": {
+            "copyrightHolder": {
+              "type": "object",
+              "properties": {
+                "id": {"type": "string"}
+              }
+            },
+            "copyrightNotice": {
+              "type": "object",
+              "properties": {
+                "id": {"type": "string"}
+              }
+            }
+          }
+        },
+        "source": {
+          "type": "object",
+          "properties": {
+            "provider": {
+              "type": "object",
+              "properties": {
+                "name" : {"type": "string"},
+                "detail" : {"$ref": "#/definitions/content"}
+              }
+            },
+            "originMedia": {"enum": ["print"]},
+            "originMediaInfo": {
+              "type": "object",
+              "properties": {
+                "type": {"type": "string"},
+                "name": {"type": "string"},
+                "number": {"type": "string"},
+                "subsection": {"type": "string"}
+              }
+            }
+          }
+        },
+        "ratingCategory": {
+          "type": "object",
+          "properties": {
+            "id": {"type": "string"}
+          }
+        },
+        "seo": {
+          "type": "object",
+          "properties": {
+            "title" : { "type" : "string"},
+            "description" : { "type" : "string"},
+            "keywords": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "robots": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "google": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "metaHeaders": {"$ref": "#/definitions/mapKeyValue"},
+        "view": {
+          "type": "object",
+          "properties": {
+            "layout": {"type": "string"},
+            "allowComments": {"type": "string"},
+            "allowPollInteraction": {"type": "string"}
+          },
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "contentType",
+        "tenant",
+        "languages",
+        "firstCreatedDate",
+        "lastModificationDate",
+        "pubStatus",
+        "located",
+        "collaborators",
+        "categories",
+        "source"
+      ]
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id" : "collections/referencedArray.schema.json",
+  "title": "ReferencedArray",
+  "description": "A single array",
+  "type": "array",
+  "items":{
+    "$ref": "../complex-object/cat-complex.schema.json"
+  }
+}

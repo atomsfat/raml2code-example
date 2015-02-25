@@ -1,0 +1,35 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "simple-object/cat-basic.schema.json",
+  "title": "Cat Basic",
+  "description": "A cat from Atoms catalog",
+  "type": "object",
+  "properties": {
+    "id": {
+      "description": "The unique identifier for a cat",
+      "type": "integer"
+    },
+    "name": {
+      "description": "Name of the cat",
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 20
+    },
+    "age": {
+      "description": "The age of the cat",
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 15
+    },
+    "weight": {
+      "description": "The weight of the cat",
+      "type": "number",
+      "minimum": 0.1,
+      "maximum": 10.0
+    }
+  },
+  "required": [
+    "id",
+    "name"
+  ]
+}
