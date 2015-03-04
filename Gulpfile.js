@@ -1,9 +1,11 @@
 var gulp = require('gulp');
+var gutil = require('gulp-util');
 
 var raml2code = require("raml2code");
 var genPojos = require("raml2code/lib/generators/groovy/pojo");
 var genJaxRS = require("raml2code/lib/generators/groovy/jaxrsInterface");
 var genRetrofitClient = require("raml2code/lib/generators/java/retrofitClient");
+var genJsClient = require("raml2code/lib/generators/javascript/jsClient");
 
 var raml = require('gulp-raml');
 
@@ -25,6 +27,7 @@ gulp.task('raml', function() {
 gulp.task("genPojos", ['raml'], function(){
   gulp.src(ramlResource)
     .pipe(raml2code({generator: genPojos, extra: {package: packagePojo}}))
+    .on('error', gutil.log)
     .pipe(gulp.dest('./src/generated/groovy/gex/catapi/dto'));
 });
 
@@ -32,6 +35,7 @@ gulp.task("genPojos", ['raml'], function(){
 gulp.task("genRetrofitClient" , ['raml'], function(){
   gulp.src(ramlResource)
     .pipe(raml2code({generator: genRetrofitClient, extra: {package: packageClient, importPojos: packagePojo}}))
+    .on('error', gutil.log)
     .pipe(gulp.dest('./src/generated/java/gex/catapi/client'));
 });
 
@@ -39,7 +43,15 @@ gulp.task("genRetrofitClient" , ['raml'], function(){
 gulp.task("genJaxRS" , ['raml'], function(){
   gulp.src(ramlResource)
     .pipe(raml2code({generator: genJaxRS, extra: {package: packageJersey, importPojos: packagePojo}}))
+    .on('error', gutil.log)
     .pipe(gulp.dest('./src/generated/groovy/gex/catapi/resources'));
+});
+
+gulp.task("genJsClient" , ['raml'], function(){
+  gulp.src('./src/index.raml')
+    .pipe(raml2code({generator: genJsClient}))
+    .on('error', gutil.log)
+    .pipe(gulp.dest('/srx/generated/js-client'));
 });
 
 
