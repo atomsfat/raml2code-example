@@ -2,10 +2,11 @@ var gulp = require('gulp');
 var gutil = require('gulp-util');
 
 var raml2code = require("raml2code");
-var genPojos = require("raml2code/lib/generators/groovy/pojo");
-var genJaxRS = require("raml2code/lib/generators/groovy/jaxrsInterface");
-var genRetrofitClient = require("raml2code/lib/generators/java/retrofitClient");
-var genJsClient = require("raml2code/lib/generators/javascript/jsClient");
+var genPojos = require("raml2code-groovy-pojo");
+var genJaxRS = require("raml2code-jaxrs-interfaces");
+var genRetrofitClient = require("raml2code-retrofit");
+var genJsClient = require("raml2code-js-client-mulesoft");
+
 
 var raml = require('gulp-raml');
 

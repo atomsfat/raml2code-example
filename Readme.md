@@ -14,3 +14,4 @@ npm -g install gulp
 gulp
 ```
 It should generated files in src/generated
+P.D Some warning should appear on the console, they are just warnings.

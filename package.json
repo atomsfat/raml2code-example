@@ -6,6 +6,10 @@
     "gulp": "3.8.8",
     "gulp-raml": "0.1.3",
     "gulp-util": "^3.0.4",
-    "raml2code": "0.8.41"
+    "raml2code": "1.8.0",
+    "raml2code-groovy-pojo": "0.0.1",
+    "raml2code-jaxrs-interfaces": "0.0.3",
+    "raml2code-js-client-mulesoft": "0.0.2",
+    "raml2code-retrofit": "0.0.1"
   }
 }
