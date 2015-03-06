@@ -49,14 +49,14 @@ gulp.task("genJaxRS" , ['raml'], function(){
 });
 
 gulp.task("genJsClient" , ['raml'], function(){
-  gulp.src('./src/index.raml')
+  gulp.src(ramlResource)
     .pipe(raml2code({generator: genJsClient}))
     .on('error', gutil.log)
-    .pipe(gulp.dest('/srx/generated/js-client'));
+    .pipe(gulp.dest('./src/generated/js-client'));
 });
 
 
 
-gulp.task('build', ['raml', 'genPojos',  'genJaxRS', 'genRetrofitClient']);
+gulp.task('build', ['raml', 'genPojos',  'genJaxRS', 'genRetrofitClient', 'genJsClient']);
 
 gulp.task('default', ['build']);
